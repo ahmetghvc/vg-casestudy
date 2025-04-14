@@ -3,7 +3,22 @@ guid: 24443f5bf829ebc498e118927045e626
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_atlas_polygon_weapon_01_a
+    second: {fileID: 2100000, guid: 94996c556aab5d049bf7a7687115591f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_atlas_polygon_weapon_01_a_trans
+    second: {fileID: 2100000, guid: d00b1d2c2635f564097e8a244f9f3233, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_atlas_polygon_weapon_01_a_trans_matt
+    second: {fileID: 2100000, guid: cd3f0d403ad19bc4b8f9c3ddf47b4851, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
