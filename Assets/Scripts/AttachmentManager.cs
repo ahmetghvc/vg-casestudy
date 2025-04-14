@@ -71,5 +71,29 @@ public class AttachmentManager : MonoBehaviour
 
     }
 
+    [ContextMenu("Show Attach")]
+    void HideAttachment()
+    {
+        
+     foreach (GameObject item in mags5)
+     {
+        item.gameObject.SetActive(true);
+     }
+
+    }
+
+    [ContextMenu("Hide Attach")]
+    void ShowAttachment()
+    {
+        foreach (GameObject item in mags5)
+        {
+            item.gameObject.SetActive(false);
+            
+        }
+    }
+
+
+
+
 
 }
