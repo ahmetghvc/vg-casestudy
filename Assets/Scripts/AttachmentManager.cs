@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class AttachmentManager : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class AttachmentManager : MonoBehaviour
 
 
     //PARAM
-
+    bool x = false;
 
     //STATE
 
@@ -58,6 +59,18 @@ public class AttachmentManager : MonoBehaviour
 
 
     //DEBUG METHODS
+
+    IEnumerator Switcher()
+    {
+
+        
+        //yield return new WaitForEndOfFrame();
+        
+        yield return null;
+        x = !x;
+
+    }
+
     [ContextMenu("Debug Scopes")]
     void DebugIt()
     {
@@ -71,26 +84,80 @@ public class AttachmentManager : MonoBehaviour
 
     }
 
-    [ContextMenu("Show Attach")]
-    void HideAttachment()
+    
+    public void HandleScope1()
     {
         
-     foreach (GameObject item in mags5)
-     {
-        item.gameObject.SetActive(true);
-     }
-
-    }
-
-    [ContextMenu("Hide Attach")]
-    void ShowAttachment()
-    {
-        foreach (GameObject item in mags5)
+        if (!x)
         {
-            item.gameObject.SetActive(false);
-            
+            ShowScope1();
         }
+        if (x)
+        {
+            HideScope1();
+        }
+
+        HideScope2 ();
     }
+
+    public void HandleScope2()
+    {
+
+        if (!x)
+        {
+            ShowScope2();
+        }
+        if (x)
+        {
+            HideScope2();
+        }
+
+        HideScope1 ();
+    }
+
+    private void HideScope2()
+    {
+        foreach (GameObject item in scope2)
+        {
+            item.SetActive(false);
+        }
+
+        StartCoroutine(Switcher());
+    }
+
+    private void ShowScope2()
+    {
+        foreach (GameObject item in scope2)
+        {
+            item.SetActive(true);
+        }
+
+        StartCoroutine(Switcher());
+    }
+
+    private void HideScope1()
+    {
+        foreach (GameObject item in scope1)
+        {
+            item.SetActive(false);
+        }
+
+        StartCoroutine(Switcher());
+    }
+
+    private void ShowScope1()
+    {
+        foreach (GameObject item in scope1)
+        {
+            item.SetActive(true);
+        }
+
+        StartCoroutine(Switcher());
+    }
+
+    
+
+
 
 
 
