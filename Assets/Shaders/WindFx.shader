@@ -8,6 +8,8 @@ Shader "Case/WindFx"
         [HDR] _TrailColor("Trail Color", Color) = (1,1,1,1)
 
         [HDR] _WindColor("Wind Color", Color) = (1,1,1,1)
+        [HDR] _PatternColor("Pattern Color",Color) = (1,1,1,1)
+        
 
         _DebuggerSlide("Debugger Slide",Range(0,1)) = 0
     }
@@ -15,7 +17,7 @@ Shader "Case/WindFx"
     {
         Tags { "RenderType"="Opaque" "Queue" = "Transparent" }
         Blend SrcAlpha OneMinusSrcAlpha
-        Cull Off
+        Cull Back
         
 
         Pass
@@ -42,7 +44,7 @@ Shader "Case/WindFx"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             fixed _ScrollTrail, _TrailSpeed;
-            fixed4 _TrailColor, _WindColor;
+            fixed4 _TrailColor, _WindColor, _PatternColor;
 
             //debugger
             fixed _DebuggerSlide;
@@ -88,22 +90,23 @@ Shader "Case/WindFx"
             {
                 
                 // Map Operations
-                fixed windAlpha = tex2D(_MainTex,i.uv).r;
+                fixed windAlpha = tex2D(_MainTex,float2(i.uv.x + Seq(_TrailSpeed * 0.35),i.uv.y)).r;
                 fixed trailAlpha = tex2D(_MainTex, 
                     OffsetUv( 
                     Warp(i.uv,20,0.01),
                     float2(0 + Seq(_TrailSpeed),_ScrollTrail)
                     )).g;
-                fixed meshGradient = tex2D(_MainTex, i.uv).b;
+                fixed4 gradients = tex2D(_MainTex, i.uv);
 
                 //Mask Operations
                 fixed trailMask= fmod(floor(frac(i.uv.x * 0.5 + Seq(_TrailSpeed*0.5)) * 2.0), 2.0);
                 
                 // Color Operations
-                fixed4 trailCol = _TrailColor * trailAlpha*trailMask;
-
+                fixed4 trailCol = _TrailColor * trailAlpha*trailMask * gradients.b * 1;
+                fixed4 windCol = windAlpha * _WindColor * gradients.b * gradients.a * 1; 
             
-                return trailCol;
+                return lerp(windCol,trailCol,trailAlpha*trailMask);
+                
             }
             ENDCG
         }
