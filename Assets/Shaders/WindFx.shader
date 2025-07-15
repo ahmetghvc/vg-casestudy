@@ -17,7 +17,8 @@ Shader "Case/WindFx"
     {
         Tags { "RenderType"="Opaque" "Queue" = "Transparent" }
         Blend SrcAlpha OneMinusSrcAlpha
-        Cull Back
+        ZTest LEqual
+        Cull Off
         
 
         Pass
@@ -96,16 +97,19 @@ Shader "Case/WindFx"
                     Warp(i.uv,20,0.01),
                     float2(0 + Seq(_TrailSpeed),_ScrollTrail)
                     )).g;
-                fixed4 gradients = tex2D(_MainTex, i.uv);
-
+                fixed4 flowAreaAlpha = tex2D(_MainTex, i.uv);
+                fixed noiseMap = tex2D(_MainTex,i.uv + Seq(_TrailSpeed *0.1));
+      
                 //Mask Operations
                 fixed trailMask= fmod(floor(frac(i.uv.x * 0.5 + Seq(_TrailSpeed*0.5)) * 2.0), 2.0);
+                fixed windSeqMask = saturate(cos(_Time.y *0.5) + 1.5); 
                 
                 // Color Operations
-                fixed4 trailCol = _TrailColor * trailAlpha*trailMask * gradients.b * 1;
-                fixed4 windCol = windAlpha * _WindColor * gradients.b * gradients.a * 1; 
+                fixed4 trailCol = _TrailColor * saturate(trailAlpha*trailMask * flowAreaAlpha.b) ;
+                fixed4 windCol = _WindColor * saturate(windAlpha * flowAreaAlpha.b * noiseMap* windSeqMask); 
             
                 return lerp(windCol,trailCol,trailAlpha*trailMask);
+                
                 
             }
             ENDCG
